@@ -112,7 +112,8 @@ function authorizationByToken (req, res) {
             const user = await db.sequelize.models.User.findByPk(id);
             res.send(user);
         }
-        getUser();
+        if(id) { return getUser()}
+        res.send("Log in.");
     }
 
     catch(err) {
