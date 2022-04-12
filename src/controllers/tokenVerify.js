@@ -2,10 +2,13 @@ const jwt = require('jsonwebtoken');
 const tokenKey = '1c2b-3c4d-5a6f-4g8h';
 
 module.exports = function tokenVerify (req, res, next) {
-
     try {
+        const token = req.headers.authorization;
+        if(!token) {
+            res.status(401).send("Log in.")
+        }
         jwt.verify(
-            req.headers.authorization.split(' ')[1],
+            token.split(' ')[1],
             tokenKey,
             (err,decoded) => {
                 if (err) { return res.send("Log in.")}
@@ -13,9 +16,7 @@ module.exports = function tokenVerify (req, res, next) {
                 next()
             }
         )
-    }
-
-    catch(err) {
+    } catch(err) {
          console.log(err);
-     }
+    }
 }

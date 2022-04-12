@@ -2,8 +2,9 @@ const db = require("../../database/models/index");
 const crypto = require("crypto");
 
 function edit (req, res){
-
     try {
+        const id = req.decoded.id;
+
         if (req.body.dob !== undefined) {
             let numberOfPoint = 0;
     
@@ -63,7 +64,7 @@ function edit (req, res){
                 .digest('hex')
              }, {
                 where: {
-                    id: req.decoded.id
+                    id: id
                 }
             })
             return res.send('User are updated.');
@@ -75,37 +76,31 @@ function edit (req, res){
             email: req.body.email
          }, {
             where: {
-              id: req.decoded.id
+              id: id
             }
         })
         res.send('User are updated.');
-    }
-
-    catch(err) {
+    } catch(err) {
         console.log(err);
-    }
+    }   
 }
 
 async function delet (req, res){
-
     try {
+        const id = req.decoded.id;
         const user = await db.sequelize.models.User.destroy({
             where: {
-              id: req.decoded.id
+              id: id
             }
         })
         if (user !== null) {res.send('User is deleted.')}
         else {res.send('User is not found.')}
-    }
-    
-    catch(err) {
+    } catch(err) {
         console.log(err);
     }
 }
 
 module.exports = {
-
     edit,
-
-    delet
+    delet,
 }
