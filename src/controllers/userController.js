@@ -1,23 +1,9 @@
-const db = require("../../models/index");
+const db = require("../../database/models/index");
 const crypto = require("crypto");
-const jwt = require('jsonwebtoken');
-const tokenKey = '1c2b-3c4d-5a6f-4g8h';
 
-module.exports = {
+function edit (req, res){
 
-    tokenVerify: function(req, res, next) {
-        jwt.verify(
-        req.headers.authorization.split(' ')[1],
-        tokenKey,
-        (err) => {
-            if (err) {res.send("Log in.")}
-            else {next()}
-        }
-        )
-    },
-
-    edit: function(req, res){
-
+    try {
         if (req.body.dob !== undefined) {
             let numberOfPoint = 0;
     
@@ -77,7 +63,7 @@ module.exports = {
                 .digest('hex')
              }, {
                 where: {
-                  id: jwt.decode( req.headers.authorization.split(' ')[1]).id
+                    id: req.decoded.id
                 }
             })
             return res.send('User are updated.');
@@ -89,19 +75,37 @@ module.exports = {
             email: req.body.email
          }, {
             where: {
-              id: jwt.decode( req.headers.authorization.split(' ')[1]).id
+              id: req.decoded.id
             }
         })
         res.send('User are updated.');
-    },
+    }
 
-    delete: async function(req, res){
+    catch(err) {
+        console.log(err);
+    }
+}
+
+async function delet (req, res){
+
+    try {
         const user = await db.sequelize.models.User.destroy({
             where: {
-              id: jwt.decode( req.headers.authorization.split(' ')[1]).id
+              id: req.decoded.id
             }
         })
         if (user !== null) {res.send('User is deleted.')}
         else {res.send('User is not found.')}
     }
+    
+    catch(err) {
+        console.log(err);
+    }
+}
+
+module.exports = {
+
+    edit,
+
+    delet
 }

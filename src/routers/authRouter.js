@@ -1,12 +1,11 @@
 const express = require("express");
-const urlencodedParser = express.urlencoded({extended: true});
 const authController = require("../controllers/authController");
 const authorizationRouter = express.Router();
 
-authorizationRouter.post('/registration', urlencodedParser, authController.registration);
+authorizationRouter.post('/registration', authController.registration);
 
-authorizationRouter.get('/authorization', urlencodedParser, authController.authorization);
+authorizationRouter.get('/authorization', authController.authorization);
 
-authorizationRouter.get('/authorizationByToken', urlencodedParser, authController.authorizationByToken);
+authorizationRouter.get('/authorizationByToken', authController.authorizationByToken);
 
 module.exports = authorizationRouter;
